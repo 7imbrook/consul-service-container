@@ -15,7 +15,11 @@ nameOverride: ""
 fullnameOverride: ""
 serviceNameOverride: ""
 
+# Configure service tags for routing
 additionalServiceTags: []
+
+# Upstreams to expose in the proxy
+# format is { service: str, port: int }
 upstreams: []
 
 
@@ -50,6 +54,7 @@ consul:
   image: consul:1.7.2
   host: consul-server.default.svc
   datacenter: local
+  tokenSecretName: null
 
 ingress:
   enabled: false
