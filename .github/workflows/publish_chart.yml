@@ -19,10 +19,8 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    - name: Helm Chart Releaser
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
+    - uses: 7imbrook/publish-helm-release-s3@v1
       with:
-        charts_dir: .
-      env:
-          CR_TOKEN: "${{ secrets.CR_TOKEN }}"
+        who-to-greet: Michael
+    - name: Get the output time
+      run: echo "The time was ${{ steps.hello.outputs.time }}"
