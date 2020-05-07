@@ -16,9 +16,7 @@ fullnameOverride: ""
 serviceNameOverride: ""
 
 additionalServiceTags: []
-upstreams:
-  - service: api
-    port: 9000
+upstreams: []
 
 
 serviceAccount:
