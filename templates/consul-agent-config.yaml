@@ -17,6 +17,15 @@ data:
       ]
 
       connect {
-        sidecar_service {}
+        sidecar_service {
+          {{- if not (empty .Values.upstreams) -}}
+            upstreams = [{{- range .Values.upstreams }}
+          {
+            destination_name = "{{ .service }}",
+            local_bind_port = {{ .port }},
+          }
+            {{- end -}}]
+          {{- end -}} 
+        }
       }
     }

@@ -16,6 +16,10 @@ fullnameOverride: ""
 serviceNameOverride: ""
 
 additionalServiceTags: []
+upstreams:
+  - service: api
+    port: 9000
+
 
 serviceAccount:
   # Specifies whether a service account should be created
