@@ -28,14 +28,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.consul.tokenSecretName }}
-          env:
-            - name: CONSUL_HTTP_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ . }}
-                  key: token
-          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.containerPort }}
@@ -57,14 +49,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           command: ["consul", "agent", "-retry-join", "{{ .Values.consul.host }}", "-config-dir", "/etc/consul.d/"]
-          {{- with .Values.consul.tokenSecretName }}
-          env:
-            - name: CONSUL_HTTP_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ . }}
-                  key: token
-          {{- end }}
           volumeMounts:
             - name: consul-agent-config
               mountPath: /etc/consul.d/
@@ -74,14 +58,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           command: ["consul", "connect", "proxy", "-sidecar-for", "{{ include "..servicename" . }}"]
-          {{- with .Values.consul.tokenSecretName }}
-          env:
-            - name: CONSUL_HTTP_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ . }}
-                  key: token
-          {{- end }}
           ports:
             - name: proxy
               containerPort: 21000

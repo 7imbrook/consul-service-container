@@ -54,7 +54,6 @@ consul:
   image: consul:1.7.2
   host: consul-server.default.svc
   datacenter: local
-  tokenSecretName: null
 
 ingress:
   enabled: false
