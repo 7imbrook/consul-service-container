@@ -1,0 +1,22 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "..fullname" . }}-consul-agent-config 
+  namespace: default
+data:
+  agent.hcl: |
+    datacenter = "{{ .Values.consul.datacenter }}"
+    data_dir = "/opt/consul/"
+  service.hcl: |
+    service {
+      name = "{{ include "..servicename" . }}"
+      port = {{ .Values.service.containerPort }}
+      tags = [
+        {{- range .Values.additionalServiceTags }}"{{ . }}",
+        {{- end -}}
+      ]
+
+      connect {
+        sidecar_service {}
+      }
+    }
