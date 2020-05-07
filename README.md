@@ -1,3 +1,4 @@
+![Helm Publish](https://github.com/7imbrook/consul-service-container/workflows/Helm%20Publish/badge.svg)
 # Consul Service Container
 Deploy a helm chart with a consul agent and side car running inside the container for service mesh
 
