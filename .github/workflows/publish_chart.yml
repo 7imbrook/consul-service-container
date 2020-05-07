@@ -23,4 +23,4 @@ jobs:
       with:
         who-to-greet: Michael
     - name: Get the output time
-      run: echo "The time was ${{ steps.hello.outputs.time }}"
+      run: echo "The time was ${{ steps.hello.outputs.time }} needs to fail" && exit 1
