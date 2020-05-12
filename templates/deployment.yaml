@@ -70,14 +70,25 @@ spec:
           env:
             - name: CONSUL_HTTP_TOKEN_FILE
               value: /var/run/secrets/consul/consul.token 
-          command: ["consul", "agent", "-retry-join", "{{ .Values.consul.host }}", "-config-dir", "/etc/consul.d/"]
+          command: [
+              "consul", "agent", 
+                "-retry-join", "{{ .Values.consul.host }}", 
+                "-config-dir", "/etc/consul.d/",
+          ]
           lifecycle:
+            postStart:
+              exec:
+                command: 
+                  - /bin/sh
+                  - /opt/scripts/post-start-agent-token.sh
             preStop:
               exec:
                 command: ["consul", "logout"]
           volumeMounts:
             - name: consul-agent-config
               mountPath: /etc/consul.d/
+            - name: startup-scripts 
+              mountPath: /opt/scripts/
             - name: consul-token
               mountPath: /var/run/secrets/consul/
         - name: sidecar-proxy
@@ -100,6 +111,9 @@ spec:
         - name: consul-agent-config
           configMap:
             name: {{ include "..fullname" . }}-consul-agent-config
+        - name: startup-scripts
+          configMap:
+            name: {{ include "..fullname" . }}-startup-scripts
         - name: consul-token
           emptyDir: {}
       {{- with .Values.nodeSelector }}
