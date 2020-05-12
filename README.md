@@ -34,3 +34,9 @@ helm install web-prerelease -f ./values-prerelease.yaml
 you now have a single service web in consul, but a a prereleased tagged version deployed via help.
 
 You can now use traffic splitting and such for testing/release
+
+# TODO
+
+- [] Add acl binding-rules needed to make this work
+- [] Add role needed for binding as well as server example
+- [] make these things code somewhere else
