@@ -52,8 +52,8 @@ service:
 consul:
   # image: 7imbrook/consul
   image: consul:1.7.2
-  host: consul-server.default.svc
-  datacenter: local
+  host: local-server.default.svc
+  datacenter: minikube
 
 ingress:
   enabled: false

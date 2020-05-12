@@ -4,8 +4,14 @@ metadata:
   name: {{ include "..fullname" . }}-consul-agent-config 
 data:
   agent.hcl: |
+    connect {
+      enabled = true
+    }
     datacenter = "{{ .Values.consul.datacenter }}"
     data_dir = "/opt/consul/"
+    acl {
+      enabled = true
+    }
   service.hcl: |
     service {
       name = "{{ include "..servicename" . }}"

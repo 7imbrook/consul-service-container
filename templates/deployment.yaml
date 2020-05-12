@@ -18,9 +18,28 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "..serviceAccountName" . }}
+      serviceAccountName: {{ include "..servicename" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        # Login to consul using kubernetes auth
+        - name: consul-login
+          image: consul:1.7.2
+          env:
+            - name: CONSUL_HTTP_ADDR
+              value: {{ .Values.consul.host }}:8500
+          volumeMounts:
+            - name: consul-token
+              mountPath: /var/run/secrets/consul/
+          command: 
+            - consul
+            - login
+            - -method
+            - kube-auth
+            - -token-sink-file
+            - /var/run/secrets/consul/consul.token
+            - -bearer-token-file
+            - /var/run/secrets/kubernetes.io/serviceaccount/token
       containers:
         # Main container
         - name: {{ .Chart.Name }}
@@ -48,25 +67,41 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: CONSUL_HTTP_TOKEN_FILE
+              value: /var/run/secrets/consul/consul.token 
           command: ["consul", "agent", "-retry-join", "{{ .Values.consul.host }}", "-config-dir", "/etc/consul.d/"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["consul", "logout"]
           volumeMounts:
             - name: consul-agent-config
               mountPath: /etc/consul.d/
+            - name: consul-token
+              mountPath: /var/run/secrets/consul/
         - name: sidecar-proxy
           image: {{ .Values.consul.image }} 
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: CONSUL_HTTP_TOKEN_FILE
+              value: /var/run/secrets/consul/consul.token 
           command: ["consul", "connect", "proxy", "-sidecar-for", "{{ include "..servicename" . }}"]
+          volumeMounts:
+            - name: consul-token
+              mountPath: /var/run/secrets/consul/
           ports:
             - name: proxy
               containerPort: 21000
               protocol: TCP
-      # Volumes
       volumes:
         - name: consul-agent-config
           configMap:
             name: {{ include "..fullname" . }}-consul-agent-config
+        - name: consul-token
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
