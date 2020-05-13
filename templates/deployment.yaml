@@ -46,6 +46,9 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: CONSUL_HTTP_TOKEN_FILE
+              value: /var/run/secrets/consul/consul.token 
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
