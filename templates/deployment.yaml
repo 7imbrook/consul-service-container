@@ -49,6 +49,9 @@ spec:
           env:
             - name: CONSUL_HTTP_TOKEN_FILE
               value: /var/run/secrets/consul/consul.token 
+          volumeMounts:
+            - name: consul-token
+              mountPath: /var/run/secrets/consul/
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
