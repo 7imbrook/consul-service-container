@@ -35,7 +35,7 @@ spec:
             - consul
             - login
             - -method
-            - kube-auth
+            - {{ .Values.consul.authMethod }} 
             - -token-sink-file
             - /var/run/secrets/consul/consul.token
             - -bearer-token-file
