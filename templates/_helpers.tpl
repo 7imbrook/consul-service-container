@@ -37,6 +37,19 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+{{- define "..serviceAccount" -}}
+{{- if .Values.serviceNameOverride -}}
+{{- .Values.serviceNameOverride | trunc 63 | trimSuffix "-" | replace "-" "_" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" | replace "-" "_" -}}
+{{- else -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" | replace "-" "_" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
