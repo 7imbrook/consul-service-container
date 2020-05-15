@@ -51,7 +51,7 @@ service:
 
 consul:
   # image: 7imbrook/consul
-  image: consul:1.7.2
+  image: consul:1.8.0-beta1
   host: consul-server.default.svc
   datacenter: sfo2
   authMethod: kube

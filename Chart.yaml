@@ -2,5 +2,5 @@ apiVersion: v2
 name: service
 description: Deploy service with consul sidecar and vault authentication.
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: alpha 
