@@ -24,7 +24,7 @@ spec:
       initContainers:
         # Login to consul using kubernetes auth
         - name: consul-login
-          image: consul:1.7.2
+          image: {{ .Values.consul.image }} 
           env:
             - name: CONSUL_HTTP_ADDR
               value: {{ .Values.consul.host }}:8500
